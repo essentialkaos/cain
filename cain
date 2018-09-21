@@ -1,0 +1,387 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1117,SC2034,SC2154
+
+########################################################################################
+
+APP="CAIN"
+VER="1.0.0"
+DESC="Simple tool for GitHub cache invalidation"
+
+########################################################################################
+
+NORM=0
+BOLD=1
+UNLN=4
+RED=31
+GREEN=32
+YELLOW=33
+BLUE=34
+MAG=35
+CYAN=36
+GREY=37
+DARK=90
+
+CL_NORM="\e[0m"
+CL_BOLD="\e[0;${BOLD};49m"
+CL_UNLN="\e[0;${UNLN};49m"
+CL_RED="\e[0;${RED};49m"
+CL_GREEN="\e[0;${GREEN};49m"
+CL_YELLOW="\e[0;${YELLOW};49m"
+CL_BLUE="\e[0;${BLUE};49m"
+CL_MAG="\e[0;${MAG};49m"
+CL_CYAN="\e[0;${CYAN};49m"
+CL_GREY="\e[0;${GREY};49m"
+CL_DARK="\e[0;${DARK};49m"
+CL_BL_RED="\e[1;${RED};49m"
+CL_BL_GREEN="\e[1;${GREEN};49m"
+CL_BL_YELLOW="\e[1;${YELLOW};49m"
+CL_BL_BLUE="\e[1;${BLUE};49m"
+CL_BL_MAG="\e[1;${MAG};49m"
+CL_BL_CYAN="\e[1;${CYAN};49m"
+CL_BL_GREY="\e[1;${GREY};49m"
+
+########################################################################################
+
+EC_OK=0
+EC_ERROR=1
+
+# Link extraction regex (String)
+PARSING_REGEX="https:\/\/camo\.githubusercontent\.com\/[a-f0-9\/]{1,}"
+
+########################################################################################
+
+SUPPORTED_ARGS="!no_colors !help !usage !version !ver"
+SHORT_ARGS="nc:!no_colors h:!help v:!version"
+
+########################################################################################
+
+# Main func
+#
+# *: All unparsed arguments
+#
+# Code: No
+# Echo: No
+main() {
+  if [[ ! -t 1 || -n "$no_colors" ]] ; then
+    unset NORM BOLD UNLN RED GREEN YELLOW BLUE MAG CYAN GREY DARK
+    unset CL_NORM CL_BOLD CL_UNLN CL_RED CL_GREEN CL_YELLOW CL_BLUE CL_MAG CL_CYAN CL_GREY CL_DARK
+    unset CL_BL_RED CL_BL_GREEN CL_BL_YELLOW CL_BL_BLUE CL_BL_MAG CL_BL_CYAN CL_BL_GREY CL_BL_DARK
+  fi
+
+  if [[ -n "$ver" || -n "$version" ]] ; then
+    about
+    exit $EC_OK
+  fi
+
+  if [[ -n "$help" || -n "$usage" || $# -eq 0 ]] ; then
+    usage
+    exit $EC_OK
+  fi
+
+  if ! isAppInstalled "curl" ; then
+    error "This utility requires curl" $RED
+    exit $EC_ERROR
+  fi
+
+  invalidate "$1"
+}
+
+# Run invalidation
+#
+# 1: URL (String)
+#
+# Code: No
+# Echo: No
+invalidate() {
+  local url="$1"
+
+  if [[ "$url" =~ github\.com ]] ; then
+    ivalidateAll "$url"
+  elif [[ "$url" =~ githubusercontent\.com ]] ; then
+    ivalidateImage "$url"
+  else
+    error "Given URL unsupported" $RED
+    exit $EC_ERROR
+  fi
+}
+
+# Download webpage and invalidate all images on this webpage
+#
+# 1: URL (String)
+#
+# Code: No
+# Echo: No
+ivalidateAll() {
+  local url="$1"
+  local img_url
+
+  showm "${CL_BOLD}Invalidation:${CL_NORM} "
+
+  while read -r img_url ; do
+    invalidateCache "$img_url"
+    printStatusBullet $?
+  done < <(curl -s "$url" 2>/dev/null | grep -Eo "$PARSING_REGEX")
+
+  show ""
+}
+
+# Invalidate image
+#
+# 1: URL (String)
+#
+# Code: No
+# Echo: No
+ivalidateImage() {
+  local url="$1"
+
+  showm "${CL_BOLD}Invalidation:${CL_NORM} "
+
+  invalidateCache "$url"
+  printStatusBullet $?
+
+  show ""
+}
+
+# Send PURGE request to given URL
+#
+# 1: URL (String)
+#
+# Code: No
+# Echo: No
+invalidateCache() {
+  local url="$1"
+
+  if curl -s -X PURGE "$url" 2>/dev/null | grep -q '"ok"' ; then
+    return 0
+  fi
+
+  return 1
+}
+
+# Print status bullet
+#
+# 1: Status (Number)
+#
+# Code: No
+# Echo: No
+printStatusBullet() {
+  if [[ $1 -eq 0 ]] ; then
+    showm "${CL_GREEN}•${CL_NORM}"
+  else
+    showm "${CL_RED}•${CL_NORM}"
+  fi
+}
+
+# Checks if app is installed
+#
+# 1: Binary name
+#
+# Code: Yes
+# Echo: No
+isAppInstalled() {
+  type -P "$1" &> /dev/null
+  return $?
+}
+
+########################################################################################
+
+# Show message
+#
+# 1: Message (String)
+# 2: Message color (Number) [Optional]
+#
+# Code: No
+# Echo: No
+show() {
+  if [[ -n "$2" && -z "$no_colors" ]] ; then
+    echo -e "\e[${2}m${1}\e[0m"
+  else
+    echo -e "$*"
+  fi
+}
+
+# Print message without new line symbol
+#
+# 1: Message (String)
+# 2: Color (Number) [Optional]
+#
+# Code: No
+# Echo: No
+showm() {
+  if [[ -n "$2" && -z "$no_colors" ]] ; then
+    echo -e -n "\e[${2}m${1}\e[0m"
+  else
+    echo -e -n "$*"
+  fi
+}
+
+# Print error message
+#
+# 1: Message (String)
+# 2: Message color (Number) [Optional]
+#
+# Code: No
+# Echo: No
+error() {
+  show "$@" 1>&2
+}
+
+# Print usage info
+#
+# Code: No
+# Echo: No
+usage() {
+  show ""
+  show "${CL_BOLD}Usage:${CL_NORM} cain ${CL_GREEN}{options}${CL_NORM} url"
+  show ""
+  show "Options" $BOLD
+  show ""
+  if [[ -n "$DARK" ]] ; then
+    show "  ${CL_GREEN}--no-color, -nc${CL_NORM} ${CL_DARK}..${CL_NORM} Disable colors in output"
+    show "  ${CL_GREEN}--help, -h${CL_NORM} ${CL_DARK}.......${CL_NORM} Show this help message"
+    show "  ${CL_GREEN}--version, -v${CL_NORM} ${CL_DARK}....${CL_NORM} Show information about version"
+  else
+    show "  ${CL_GREEN}--no-color, -nc${CL_NORM}    Disable colors in output"
+    show "  ${CL_GREEN}--help, -h${CL_NORM}         Show this help message"
+    show "  ${CL_GREEN}--version, -v${CL_NORM}      Show information about version"
+  fi
+  show ""
+  show "Examples" $BOLD
+  show ""
+  show "  cain https://camo.githubusercontent.com/abcdabcbd1abcd528abcd18acdb1ba31bad"
+  show "  Invalidate cache for one image" $DARK
+  show ""
+  show "  cain https://github.com/owner/repo/blob/master/README.md"
+  show "  Invalidate all images on given page" $DARK
+  show ""
+}
+
+# Show info about version
+#
+# Code: No
+# Echo: No
+about() {
+  show ""
+  show "${CL_BL_CYAN}$APP${CL_NORM} ${CL_CYAN}$VER${CL_NORM} - $DESC"
+  show ""
+  show "Copyright (C) 2009-$(date +%Y) ESSENTIAL KAOS" $DARK
+  show "Essential Kaos Open Source License <https://essentialkaos.com/ekol>" $DARK
+  show ""
+}
+
+# Show warning message about unsupported argument
+#
+# 1: Argument name (String)
+#
+# Code: No
+# Echo: No
+showArgWarn() {
+  error "Unknown argument $1" $RED
+  exit 1
+}
+
+## ARGUMENTS PARSING 4 #################################################################
+
+[[ $# -eq 0 ]] && main && exit $?
+
+unset arg argn argm argv argt argk
+
+argv="$*" ; argt=""
+
+while [[ -n "$1" ]] ; do
+  if [[ "$1" =~ \  && -n "$argn" ]] ; then
+    declare "$argn=$1"
+
+    unset argn && shift && continue
+  elif [[ $1 =~ ^-{1}[a-zA-Z0-9]{1,2}+.*$ ]] ; then
+    argm=${1:1}
+
+    if [[ \ $SHORT_ARGS\  =~ \ $argm:!?([a-zA-Z0-9_]*) ]] ; then
+      arg="${BASH_REMATCH[1]}"
+    else
+      declare -F showArgWarn &>/dev/null && showArgWarn "-$argm"
+      shift && continue
+    fi
+
+    if [[ -z "$argn" ]] ; then
+      argn=$arg
+    else
+      # shellcheck disable=SC2015
+      [[ -z "$argk" ]] && ( declare -F showArgValWarn &>/dev/null && showArgValWarn "--$argn" ) || declare "$argn=true"
+      argn=$arg
+    fi
+
+    if [[ ! $SUPPORTED_ARGS\  =~ !?$argn\  ]] ; then
+      declare -F showArgWarn &>/dev/null && showArgWarn "-$argm"
+      shift && continue
+    fi
+
+    if [[ ${BASH_REMATCH[0]:0:1} == "!" ]] ; then
+      declare "$argn=true" ; unset argn ; argk=true
+    else
+      unset argk
+    fi
+
+    shift && continue
+  elif [[ "$1" =~ ^-{2}[a-zA-Z]{1}[a-zA-Z0-9_-]+.*$ ]] ; then
+    arg=${1:2}
+
+    if [[ $arg == *=* ]] ; then
+      IFS="=" read -ra arg <<< "$arg"
+
+      argm="${arg[0]}" ; argm=${argm//-/_}
+
+      if [[ ! $SUPPORTED_ARGS\  =~ $argm\  ]] ; then
+        declare -F showArgWarn &>/dev/null && showArgWarn "--${arg[0]//_/-}"
+        shift && continue
+      fi
+
+      # shellcheck disable=SC2015
+      [[ -n "${!argm}" && $MERGEABLE_ARGS\  =~ $argm\  ]] && declare "$argm=${!argm} ${arg[*]:1:99}" || declare "$argm=${arg[*]:1:99}"
+
+      unset argm && shift && continue
+    else
+      arg=${arg//-/_}
+
+      if [[ -z "$argn" ]] ; then
+        argn=$arg
+      else
+        # shellcheck disable=SC2015
+        [[ -z "$argk" ]] && ( declare -F showArgValWarn &>/dev/null && showArgValWarn "--$argn" ) || declare "$argn=true"
+        argn=$arg
+      fi
+
+      if [[ ! $SUPPORTED_ARGS\  =~ !?$argn\  ]] ; then
+        declare -F showArgWarn &>/dev/null && showArgWarn "--${argn//_/-}"
+        shift && continue
+      fi
+
+      if [[ ${BASH_REMATCH[0]:0:1} == "!" ]] ; then
+        declare "$argn=true" ; unset argn ; argk=true
+      else
+        unset argk
+      fi
+
+      shift && continue
+    fi
+  else
+    if [[ -n "$argn" ]] ; then
+      # shellcheck disable=SC2015
+      [[ -n "${!argn}" && $MERGEABLE_ARGS\  =~ $argn\  ]] && declare "$argn=${!argn} $1" || declare "$argn=$1"
+
+      unset argn && shift && continue
+    fi
+  fi
+
+  argt="$argt $1" ; shift
+
+done
+
+[[ -n "$argn" ]] && declare "$argn=true"
+
+unset arg argn argm argk
+
+# shellcheck disable=SC2015,SC2086
+[[ -n "$KEEP_ARGS" ]] && main $argv || main ${argt:1}
+
+########################################################################################

@@ -1,1 +1,49 @@
-# cain
+<p align="center"><a href="#readme"><img src="https://gh.kaos.st/cain.svg"/></a></p>
+
+<p align="center"><a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#build-status">Build Status</a> • <a href="#license">License</a></p>
+
+`cain` is a simple tool for GitHub cache invalidation.
+
+### Installation
+
+#### From GitHub repository
+
+```bash
+wget https://kaos.sh/cain/cain
+chmod +x cain
+[sudo] mv cain /usr/bin/
+```
+
+### Usage
+
+```
+Usage: cain {options} url
+
+Options
+
+  --no-color, -nc    Disable colors in output
+  --help, -h         Show this help message
+  --version, -v      Show information about version
+
+Examples
+
+  cain https://camo.githubusercontent.com/abcdabcbd1abcd528abcd18acdb1ba31bad
+  Invalidate cache for one image
+
+  cain https://github.com/owner/repo/blob/master/README.md
+  Invalidate all images on given page
+
+```
+
+### Build Status
+
+| Branch | Status |
+|--------|--------|
+| `master` | [![Build Status](https://travis-ci.org/essentialkaos/cain.svg?branch=master)](https://travis-ci.org/essentialkaos/cain) |
+| `develop` | [![Build Status](https://travis-ci.org/essentialkaos/cain.svg?branch=develop)](https://travis-ci.org/essentialkaos/cain) |
+
+### License
+
+[EKOL](https://essentialkaos.com/ekol)
+
+<p align="center"><a href="https://essentialkaos.com"><img src="https://gh.kaos.st/ekgh.svg"/></a></p>

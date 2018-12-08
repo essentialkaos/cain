@@ -19,6 +19,12 @@ chmod +x cain
 [sudo] mv cain /usr/bin/
 ```
 
+Also, you can use the latest version of utilities without installation:
+
+```bash
+bash <(curl -fsSL https://kaos.sh/cain/cain) # pass options here
+```
+
 ### Usage
 
 ```

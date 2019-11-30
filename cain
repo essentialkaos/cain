@@ -288,6 +288,18 @@ showArgWarn() {
   exit 1
 }
 
+# Handler for errors
+#
+# Code: No
+# Echo: No
+errHandler() {
+  while caller $((n++)) ; do
+    true
+  done
+
+  exit 1
+}
+
 ## ARGUMENTS PARSING 4 #################################################################
 
 [[ $# -eq 0 ]] && main && exit $?

@@ -3,8 +3,14 @@
 
 ########################################################################################
 
+if [[ -n "${SCRIPT_DEBUG}" ]] ; then
+  set -x
+fi
+
+########################################################################################
+
 APP="CAIN"
-VER="1.0.0"
+VER="1.0.1"
 DESC="Simple tool for GitHub cache invalidation"
 
 ########################################################################################
@@ -62,6 +68,8 @@ SHORT_ARGS="nc:!no_colors h:!help v:!version"
 # Code: No
 # Echo: No
 main() {
+  trap errHandler ERR
+
   if [[ ! -t 1 || -n "$no_colors" ]] ; then
     unset NORM BOLD UNLN RED GREEN YELLOW BLUE MAG CYAN GREY DARK
     unset CL_NORM CL_BOLD CL_UNLN CL_RED CL_GREEN CL_YELLOW CL_BLUE CL_MAG CL_CYAN CL_GREY CL_DARK

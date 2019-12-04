@@ -1,7 +1,7 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/cain.svg"/></a></p>
 
 <p align="center">
-  <a href="https://travis-ci.org/essentialkaos/cain"><img src="https://travis-ci.org/essentialkaos/cain.svg"></a>
+  <a href="https://travis-ci.com/essentialkaos/cain"><img src="https://travis-ci.com/essentialkaos/cain.svg"></a>
   <a href="https://essentialkaos.com/ekol"><img src="https://gh.kaos.st/ekol.svg"></a>
 </p>
 
@@ -52,8 +52,8 @@ Examples
 
 | Branch | Status |
 |--------|--------|
-| `master` | [![Build Status](https://travis-ci.org/essentialkaos/cain.svg?branch=master)](https://travis-ci.org/essentialkaos/cain) |
-| `develop` | [![Build Status](https://travis-ci.org/essentialkaos/cain.svg?branch=develop)](https://travis-ci.org/essentialkaos/cain) |
+| `master` | [![Build Status](https://travis-ci.com/essentialkaos/cain.svg?branch=master)](https://travis-ci.com/essentialkaos/cain) |
+| `develop` | [![Build Status](https://travis-ci.com/essentialkaos/cain.svg?branch=develop)](https://travis-ci.com/essentialkaos/cain) |
 
 ### License
 

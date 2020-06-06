@@ -18,7 +18,7 @@
 ```bash
 wget https://kaos.sh/cain/cain
 chmod +x cain
-[sudo] mv cain /usr/bin/
+sudo mv cain /usr/bin/
 ```
 
 Also, you can use the latest version of utility without installation:

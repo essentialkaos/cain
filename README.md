@@ -1,7 +1,7 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/cain.svg"/></a></p>
 
 <p align="center">
-  <a href="https://github.com/essentialkaos/cain/actions"><img src="https://github.com/essentialkaos/cain/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
+  <a href="https://kaos.sh/w/cain/ci"><img src="https://kaos.sh/w/cain/ci.svg" alt="GitHub Actions CI Status" /></a>
   <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
 </p>
 
@@ -52,8 +52,8 @@ Examples
 
 | Branch | Status |
 |--------|--------|
-| `master` | [![CI](https://github.com/essentialkaos/cain/workflows/CI/badge.svg?branch=master)](https://github.com/essentialkaos/cain/actions) |
-| `develop` | [![CI](https://github.com/essentialkaos/cain/workflows/CI/badge.svg?branch=develop)](https://github.com/essentialkaos/cain/actions) |
+| `master` | [![CI](https://kaos.sh/w/cain/ci.svg?branch=master)](https://kaos.sh/w/cain/ci?query=branch:master) |
+| `develop` | [![CI](https://kaos.sh/w/cain/ci.svg?branch=master)](https://kaos.sh/w/cain/ci?query=branch:develop) |
 
 ### License
 

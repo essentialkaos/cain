@@ -31,13 +31,6 @@ bash <(curl -fsSL https://kaos.sh/cain/cain) # pass options here
 
 <img src=".github/images/usage.svg"/>
 
-### CI Status
-
-| Branch | Status |
-|--------|--------|
-| `master` | [![CI](https://kaos.sh/w/cain/ci.svg?branch=master)](https://kaos.sh/w/cain/ci?query=branch:master) |
-| `develop` | [![CI](https://kaos.sh/w/cain/ci.svg?branch=master)](https://kaos.sh/w/cain/ci?query=branch:develop) |
-
 ### License
 
 [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)

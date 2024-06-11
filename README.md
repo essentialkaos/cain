@@ -1,11 +1,11 @@
-<p align="center"><a href="#readme"><img src="https://gh.kaos.st/cain.svg"/></a></p>
+<p align="center"><a href="#readme"><img src=".github/images/card.svg"/></a></p>
 
 <p align="center">
   <a href="https://kaos.sh/w/cain/ci"><img src="https://kaos.sh/w/cain/ci.svg" alt="GitHub Actions CI Status" /></a>
-  <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
+  <a href="#license"><img src=".github/images/license.svg"/></a>
 </p>
 
-<p align="center"><a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#build-status">Build Status</a> • <a href="#license">License</a></p>
+<p align="center"><a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#ci-status">CI Status</a> • <a href="#license">License</a></p>
 
 <br/>
 
@@ -29,26 +29,9 @@ bash <(curl -fsSL https://kaos.sh/cain/cain) # pass options here
 
 ### Usage
 
-```
-Usage: cain {options} url
+<img src=".github/images/usage.svg"/>
 
-Options
-
-  --no-color, -nc    Disable colors in output
-  --help, -h         Show this help message
-  --version, -v      Show information about version
-
-Examples
-
-  cain https://camo.githubusercontent.com/abcdabcbd1abcd528abcd18acdb1ba31bad
-  Invalidate cache for one image
-
-  cain https://github.com/owner/repo/blob/master/README.md
-  Invalidate all images on given page
-
-```
-
-### Build Status
+### CI Status
 
 | Branch | Status |
 |--------|--------|

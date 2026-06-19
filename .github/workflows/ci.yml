@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check scripts with Shellcheck
         uses: essentialkaos/shellcheck-action@v1
